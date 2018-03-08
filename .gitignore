@@ -30,3 +30,8 @@
 *.exe
 *.out
 *.app
+
+# VS files
+*.db
+*.opendb
+*.filters
