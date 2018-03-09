@@ -53,9 +53,9 @@ cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size)
     }
 
     // Allocate GPU buffers for three vectors (two input, one output) 
-	auto dev_a = cudacpp::DeviceVector<int>::allocate(size);
-	auto dev_b = cudacpp::DeviceVector<int>::allocate(size);
-	auto dev_c = cudacpp::DeviceVector<int>::allocate(size);
+	cudacpp::DeviceMemory dev_a(sizeof(int) * size);
+	cudacpp::DeviceMemoryT<int> dev_b(size);
+	cudacpp::DeviceMemoryT<int> dev_c(size);
 
     // Copy input vectors from host memory to GPU buffers.
     cudaStatus = cudaMemcpy(dev_a, a, size * sizeof(int), cudaMemcpyHostToDevice);
@@ -73,7 +73,7 @@ cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size)
     // Launch a kernel on the GPU with one thread for each element.
 	cudacpp::GridSize<0, 1> grid{ {}, {size} };
 
-    addKernel<0, 1><<<grid.blocks, grid.threads>>>(dev_c, dev_a, dev_b);
+    addKernel<0, 1, int><<<grid.blocks, grid.threads>>>(dev_c, { dev_a, size }, dev_b);
 
     // Check for any errors launching the kernel
     cudaStatus = cudaGetLastError();
@@ -97,9 +97,5 @@ cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size)
 		return cudaStatus;
     }
 
-	dev_a.release();
-	dev_b.release();
-	dev_c.release();
-    
     return cudaStatus;
 }
