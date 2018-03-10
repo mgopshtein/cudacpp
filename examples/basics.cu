@@ -6,6 +6,7 @@
 
 #include "cudacpp\DeviceVector.h"
 #include "cudacpp\Index.h"
+#include "cudacpp\Grid.h"
 
 cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
 
@@ -13,8 +14,9 @@ template<int DIM_BLOCKS, int DIM_THREADS, typename T>
 __global__ void addKernel(cudacpp::DeviceVector<T> c, const cudacpp::DeviceVector<T> a, const cudacpp::DeviceVector<T> b)
 {
 	auto idx = cudacpp::Index<1>::create<DIM_BLOCKS, DIM_THREADS>();
-    
-	c[idx.x] = a[idx.x] + b[idx.x];
+	if (idx.inRange(c.size())) {
+		c[idx] = a[idx] + b[idx];
+	}
 }
 
 int basics(int size, const int *a, const int *b, int *c)
@@ -71,9 +73,12 @@ cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size)
     }
 
     // Launch a kernel on the GPU with one thread for each element.
-	cudacpp::GridSize<0, 1> grid{ {}, {size} };
 
-    addKernel<0, 1, int><<<grid.blocks, grid.threads>>>(dev_c, { dev_a, size }, dev_b);
+	cudacpp::DeviceVector<int> vec_a{ dev_a, size };
+
+	auto grid = cudacpp::CreateGrid(cudacpp::Size<1>{4}, vec_a.size());
+
+    addKernel<grid.DimBlocks, grid.DimThreads, int><<<grid.blocks, grid.threads>>>(dev_c, vec_a, dev_b);
 
     // Check for any errors launching the kernel
     cudaStatus = cudaGetLastError();

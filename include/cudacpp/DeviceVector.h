@@ -3,6 +3,9 @@
 #include "cuda_runtime.h"
 #include <utility>
 
+#include "Size.h"
+#include "Index.h"
+
 namespace cudacpp {
 
 
@@ -46,11 +49,12 @@ template<typename T>
 class DeviceMemoryT
 	: public DeviceMemory
 {
-	std::size_t _sz;
+	DimSize _sz;
 
 public:
-	DeviceMemoryT(std::size_t sz)
+	DeviceMemoryT(DimSize sz)
 		: DeviceMemory(sizeof(T) * sz)
+		, _sz(sz)
 	{}
 
 	DeviceMemoryT(DeviceMemoryT<T> &&from)
@@ -68,10 +72,10 @@ public:
 template<typename T>
 class DeviceVector {
 	T *_p;
-	std::size_t _sz;
+	Size<1> _sz;
 
 public:
-	DeviceVector(DeviceMemory &mem, std::size_t sz)
+	DeviceVector(DeviceMemory &mem, DimSize sz)
 		: _p(reinterpret_cast<T*>(mem.ptr()))
 		, _sz(sz)
 	{}
@@ -84,8 +88,11 @@ public:
 	DeviceVector() = delete;
 
 	__device__ __host__ __inline__ T& operator[](std::size_t i) { return _p[i]; }
+	__device__ __host__ __inline__ T& operator[](Index<1> i) { return _p[i.x]; }
 	__device__ __host__ __inline__ const T& operator[](std::size_t i) const { return _p[i]; }
+	__device__ __host__ __inline__ const T& operator[](Index<1> i) const { return _p[i.x]; }
 	__device__ __host__ __inline__ operator T* () { return _p; }
+	__device__ __host__ __inline__ auto size() { return _sz; }
 };
 
 
