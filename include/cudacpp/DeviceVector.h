@@ -75,6 +75,10 @@ class DeviceVector {
 	Size<1> _sz;
 
 public:
+	constexpr static int DimIndex = 1;
+	using Index = Index<DimIndex>;
+	using DataT = T;
+
 	DeviceVector(DeviceMemory &mem, DimSize sz)
 		: _p(reinterpret_cast<T*>(mem.ptr()))
 		, _sz(sz)
@@ -88,9 +92,9 @@ public:
 	DeviceVector() = delete;
 
 	__device__ __host__ __inline__ T& operator[](std::size_t i) { return _p[i]; }
-	__device__ __host__ __inline__ T& operator[](Index<1> i) { return _p[i.x]; }
+	__device__ __host__ __inline__ T& operator[](Index i) { return _p[i.x]; }
 	__device__ __host__ __inline__ const T& operator[](std::size_t i) const { return _p[i]; }
-	__device__ __host__ __inline__ const T& operator[](Index<1> i) const { return _p[i.x]; }
+	__device__ __host__ __inline__ const T& operator[](Index i) const { return _p[i.x]; }
 	__device__ __host__ __inline__ operator T* () { return _p; }
 	__device__ __host__ __inline__ auto size() { return _sz; }
 };
