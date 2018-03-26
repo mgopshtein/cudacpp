@@ -159,6 +159,8 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="..\examples\basics.cu" />
+    <CudaCompile Include="..\examples\nonvirtual.cu" />
+    <CudaCompile Include="..\examples\virtual.cu" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

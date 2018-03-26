@@ -20,7 +20,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\cudacpp\DeviceVector.h" />
+    <ClInclude Include="..\include\cudacpp\Grid.h" />
     <ClInclude Include="..\include\cudacpp\Index.h" />
+    <ClInclude Include="..\include\cudacpp\Size.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F4E715C4-1164-4C3C-B206-B6CEDF9E2B87}</ProjectGuid>
