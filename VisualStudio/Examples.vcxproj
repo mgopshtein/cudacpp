@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="..\examples\basics.cu" />
+    <CudaCompile Include="..\examples\code-rtc.cu" />
     <CudaCompile Include="..\examples\lambda.cu">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">--expt-extended-lambda %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">--expt-extended-lambda %(AdditionalOptions)</AdditionalOptions>
@@ -20,6 +21,7 @@
     <CudaCompile Include="..\examples\virtual.cu" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\examples\invoke-rtc.cpp" />
     <ClCompile Include="..\examples\main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -64,7 +66,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>cudart.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>nvrtc.lib;cuda.lib;Dbghelp.lib;cudart.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>echo copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"
@@ -88,7 +90,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>cudart.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>nvrtc.lib;cuda.lib;Dbghelp.lib;cudart.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>echo copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"

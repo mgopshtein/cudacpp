@@ -11,10 +11,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\cudacpp\CudaContext.h" />
+    <ClInclude Include="..\include\cudacpp\CudaDevice.h" />
     <ClInclude Include="..\include\cudacpp\DeviceVector.h" />
     <ClInclude Include="..\include\cudacpp\Grid.h" />
     <ClInclude Include="..\include\cudacpp\Index.h" />
+    <ClInclude Include="..\include\cudacpp\rtc\Code.h" />
+    <ClInclude Include="..\include\cudacpp\rtc\CompilationOptions.h" />
+    <ClInclude Include="..\include\cudacpp\rtc\Header.h" />
+    <ClInclude Include="..\include\cudacpp\rtc\Kernel.h" />
+    <ClInclude Include="..\include\cudacpp\rtc\Module.h" />
+    <ClInclude Include="..\include\cudacpp\rtc\Program.h" />
     <ClInclude Include="..\include\cudacpp\Size.h" />
+    <ClInclude Include="..\include\cudacpp\Stream.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{60D6E165-3858-46D8-80E0-0576425AA0E3}</ProjectGuid>

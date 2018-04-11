@@ -109,7 +109,4 @@ int testLambda(int size, int *c, int val) {
 	}
 
 	return cudaStatus;
-
-
-	return 0;
 }

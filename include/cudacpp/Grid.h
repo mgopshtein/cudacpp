@@ -12,6 +12,19 @@ struct Grid {
 	Size<DIM_BLOCKS> blocks;
 	Size<DIM_THREADS> threads;
 
+	template<int DIM_SZ_BL, int DIM_SZ_TH>
+	Grid(const Size<DIM_SZ_BL> &b, const Size<DIM_SZ_TH> &t)
+		: blocks(b)
+		, threads(t)
+	{}
+
+	template<int DIM_SZ_BL, int DIM_SZ_TH>
+	Grid(const Grid<DIM_SZ_BL, DIM_SZ_TH> &g)
+		: blocks(g.blocks)
+		, threads(g.threads)
+	{}
+
+
 	constexpr static int DimBlocks = DIM_BLOCKS;
 	constexpr static int DimThreads = DIM_THREADS;
 

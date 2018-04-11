@@ -36,6 +36,8 @@ template<>
 struct Size<2> : public Size<1> {
 	DimSize y;
 	__host__ __device__ __inline__ Size(DimSize xx, DimSize yy) : Size<1>(xx), y(yy) {}
+	__host__ __device__ __inline__ Size(DimSize xx) : Size(xx, 1) {}
+	__host__ __device__ __inline__ Size(const Size<1>& s1) : Size(s1.x, 1) {}
 
 	__host__ __device__ __inline__ bool operator<(const Size& sz) const { return x < sz.x && y < sz.y; }
 	__host__ __device__ __inline__ DimSize volume() const { return Size<1>::volume() * y; }
@@ -49,6 +51,12 @@ template<>
 struct Size<3> : public Size<2> {
 	DimSize z;
 	__host__ __device__ __inline__ Size(DimSize xx, DimSize yy, DimSize zz) : Size<2>(xx, yy), z(zz) {}
+	__host__ __device__ __inline__ Size(DimSize xx, DimSize yy) : Size(xx, yy, 1) {}
+	__host__ __device__ __inline__ Size(DimSize xx) : Size(xx, 1) {}
+
+	__host__ __device__ __inline__ Size(const Size<1>& s1) : Size(s1.x, 1,    1) {}
+	__host__ __device__ __inline__ Size(const Size<2>& s2) : Size(s2.x, s2.y, 1) {}
+
 	__host__ __device__ __inline__ Size(dim3 d3) : Size(d3.x, d3.y, d3.z) {}
 
 	__host__ __device__ __inline__ bool operator<(const Size& sz) const { return x < sz.x && y < sz.y && z < sz.z; }
