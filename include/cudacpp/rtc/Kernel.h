@@ -176,7 +176,7 @@ inline Kernel & Kernel::instatiate() {
 
 
 template<typename... ARGS>
-CUresult Kernel::launch(const Stream& stream, const Grid<3, 3>& grid, unsigned int sharedMem, const ARGS& ...args) {
+inline CUresult Kernel::launch(const Stream& stream, const Grid<3, 3>& grid, unsigned int sharedMem, const ARGS& ...args) {
 	auto vec = detail::BuildArgs(args...);
 	auto vecPtr = (vec.empty()) ? nullptr : vec.data();
 	return cuLaunchKernel(

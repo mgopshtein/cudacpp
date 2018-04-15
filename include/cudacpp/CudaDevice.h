@@ -70,7 +70,7 @@ public:
 };
 
 
-CUdevice CudaDevice::handle() const {
+inline CUdevice CudaDevice::handle() const {
 	CUdevice h;
 	if (CUDA_SUCCESS != cuDeviceGet(&h, _device)) {
 		throw std::exception("Could not get device handle");
@@ -79,7 +79,7 @@ CUdevice CudaDevice::handle() const {
 }
 
 
-CudaDevice CudaDevice::FindByProperties(const CudaDeviceProperties& props) {
+inline CudaDevice CudaDevice::FindByProperties(const CudaDeviceProperties& props) {
 	int device;
 	auto res = cudaChooseDevice(&device, &props.getRawStruct());
 	if (res != cudaSuccess) {
@@ -90,7 +90,7 @@ CudaDevice CudaDevice::FindByProperties(const CudaDeviceProperties& props) {
 }
 
 
-int CudaDevice::NumberOfDevices() {
+inline int CudaDevice::NumberOfDevices() {
 	int numDevices = 0;
 	if (cudaSuccess != cudaGetDeviceCount(&numDevices)) {
 		throw std::exception("Failed to get number of CUDA devices");
@@ -99,7 +99,7 @@ int CudaDevice::NumberOfDevices() {
 }
 
 
-CudaDevice CudaDevice::FindByName(std::string name) {
+inline CudaDevice CudaDevice::FindByName(std::string name) {
 	int numDevices = NumberOfDevices();
 	if (numDevices == 0) {
 		throw std::exception("No CUDA devices found");
@@ -119,7 +119,7 @@ CudaDevice CudaDevice::FindByName(std::string name) {
 	throw std::exception("Could not find CUDA device by name");
 }
 
-std::vector<CudaDevice> CudaDevice::EnumerateDevices() {
+inline std::vector<CudaDevice> CudaDevice::EnumerateDevices() {
 	std::vector<CudaDevice> res;
 	int numDevices = NumberOfDevices();
 	for (int i = 0; i < numDevices; i++) {
@@ -128,7 +128,7 @@ std::vector<CudaDevice> CudaDevice::EnumerateDevices() {
 	return res;
 }
 
-CudaDevice CudaDevice::CurrentDevice() {
+inline CudaDevice CudaDevice::CurrentDevice() {
 	int device;
 	if (cudaSuccess != cudaGetDevice(&device)) {
 		throw std::exception("Can't get current device index");

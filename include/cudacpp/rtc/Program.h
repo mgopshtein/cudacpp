@@ -84,7 +84,7 @@ public:
 
 
 
-Program::Program(const std::string &name, const Code &code, const std::vector<Header> &headers) {
+inline Program::Program(const std::string &name, const Code &code, const std::vector<Header> &headers) {
 	// prepare the arrays for headers
 	auto nh = headers.size();
 	std::vector<const char *> headersContent;
@@ -106,7 +106,7 @@ Program::Program(const std::string &name, const Code &code, const std::vector<He
 }
 
 
-std::string Program::PTX() const {
+inline std::string Program::PTX() const {
 	std::size_t size = 0;
 	nvrtcGetPTXSize(_prog, &size);
 	std::string res(size, '\0');
@@ -114,7 +114,7 @@ std::string Program::PTX() const {
 	return res;
 }
 
-void Program::compile(const CompilationOptions &opt) {
+inline void Program::compile(const CompilationOptions &opt) {
 	auto res = nvrtcCompileProgram(
 		_prog,
 		(int)opt.numOptions(),
