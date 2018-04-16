@@ -27,14 +27,14 @@ namespace rtc {
  * Then for "process<float, 10>" you create the Kernel object as:
  *
  * Kernel k("process");
- * k.instatiate<float, std::integral_constant<int, 10>>();
+ * k.instantiate<float, std::integral_constant<int, 10>>();
  *
  * alternatively you can use TemplateParameters class directly:
  *
  * TemplateParameters tp;
  * tp.addType<float>();
  * tp.addValue(10);
- * k.instatiate(tp);
+ * k.instantiate(tp);
  * </EXAMPLE>
  *
  * k.launch(stream, stream, shared_mem_size, params);      // launches the kernel
@@ -49,11 +49,11 @@ public:
 
 	Kernel(const std::string &name);
 
-	Kernel & instatiate(const TemplateParameters&);
+	Kernel & instantiate(const TemplateParameters&);
 
 	// builds template parameters string automatically
 	template<typename... ARGS>
-	Kernel & instatiate();
+	Kernel & instantiate();
 
 	const auto & getFullName() const { return _name; }
 
@@ -160,17 +160,17 @@ inline Kernel::Kernel(const std::string &name)
 	: _name(name)
 {}
 
-inline Kernel & Kernel::instatiate(const TemplateParameters &tp) {
+inline Kernel & Kernel::instantiate(const TemplateParameters &tp) {
 	_name = _name + '<' + tp() + '>';
 	return *this;
 }
 
 
 template<typename... ARGS>
-inline Kernel & Kernel::instatiate() {
+inline Kernel & Kernel::instantiate() {
 	TemplateParameters tp;
 	detail::AddTypesToTemplate<ARGS...>(tp);
-	return instatiate(tp);
+	return instantiate(tp);
 }
 
 

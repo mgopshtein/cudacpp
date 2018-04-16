@@ -16,7 +16,7 @@ int testinvokeRTC(int size) {
  
 	rtc::Program prog("myprog", rtc::Code::FromFile("..\\examples\\code-rtc.cu"));
 
-	auto kernel = rtc::Kernel("setKernel").instatiate<float, std::integral_constant<int, 10>>();
+	auto kernel = rtc::Kernel("setKernel").instantiate<float, std::integral_constant<int, 10>>();
 
 	prog.registerKernel(kernel);
 
