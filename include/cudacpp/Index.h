@@ -8,7 +8,10 @@ namespace cudacpp {
 
 
 template<int DIM>
-struct Index;
+struct Index {
+	template<int DIM_BLOCKS, int DIM_THREADS>
+	__host__ __device__ __inline__ static Index create();
+};
 
 template<>
 struct Index<1> 
@@ -40,7 +43,12 @@ struct Index<1>
 		return {blockId * blockDim.x + threadIdx.x};
 	}
 
-	__host__ __device__ __inline__ bool inRange(Size<1> sz) { return *this < sz; }
+	__host__ __device__ __inline__ bool inRange(Size<1> sz) const { return *this < sz; }
+
+	template<int DIM_BLOCKS, int DIM_THREADS>
+	__device__ __inline__ static Index create(Size<DIM_BLOCKS>, Size<DIM_THREADS>) {
+		return create<DIM_BLOCKS, DIM_THREADS>();
+	}
 
 };
 
@@ -51,19 +59,34 @@ struct Index<2>
 	using Size<2>::Size;
 
 	template<int DIM_BLOCKS, int DIM_THREADS>
-	__host__ __device__ __inline__ static Index create();
+	__device__ __inline__ static Index create();
 
 	template<>
-	__host__ __device__ __inline__ static Index create<0, 2>() {
+	__device__ __inline__ static Index create<0, 2>() {
 		return {threadIdx.x, threadIdx.y};
 	}
 
 	template<>
-	__host__ __device__ __inline__ static Index create<2, 2>() {
+	__device__ __inline__ static Index create<2, 2>() {
 		return { (blockIdx.x * blockDim.x) + threadIdx.x, (blockIdx.y * blockDim.y) + threadIdx.y };
 	}
 
-	__host__ __device__ __inline__ bool inRange(Size<2> sz) { return *this < sz; }
+	__device__ __inline__ bool inRange(Size<2> sz) const { return *this < sz; }
+
+	template<int DIM_BLOCKS, int DIM_THREADS>
+	__device__ __inline__ static Index create(Size<DIM_BLOCKS>, Size<DIM_THREADS>) {
+		return create<DIM_BLOCKS, DIM_THREADS>();
+	}
 };
 
+
+template<int DIM, int DIM_BLOCKS, int DIM_THREADS>
+__device__ __inline__ static auto CreateIndex() {
+	return Index<DIM>::create(Size<DIM_BLOCKS>{0}, Size<DIM_THREADS>{0});
 }
+
+
+}
+
+
+

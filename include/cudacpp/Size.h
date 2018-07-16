@@ -30,6 +30,7 @@ struct Size<1> {
 
 	__host__ __device__ __inline__ Size<1> divideMin(const Size<1> &sz) const { return{ (x + sz.x - 1) / sz.x }; }
 
+	__host__ __device__ __inline__ operator DimSize() const { return x; }
 };
 
 template<>

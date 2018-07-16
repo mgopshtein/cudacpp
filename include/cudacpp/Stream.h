@@ -6,6 +6,7 @@
 #include "cuda.h"
 
 #include "Size.h"
+#include "Event.h"
 
 namespace cudacpp {
 
@@ -34,7 +35,7 @@ public:
 	Stream& operator=(const Stream&) = delete;
 
 	Stream(Stream &&from) : _stream(from._stream) { from._stream = nullptr; }
-	Stream& operator=(Stream &&from) { std::swap(_stream, from._stream); }
+	Stream& operator=(Stream &&from) { std::swap(_stream, from._stream); return *this; }
 
 	~Stream() {
 		if (_stream) {
@@ -46,6 +47,10 @@ public:
 
 	CUstream operator()() const { return _stream; }
 	auto synchronize() const { return cuStreamSynchronize(_stream); }
+
+	void record(Event& e) {
+		cuEventRecord(e._event, _stream);
+	}
 };
 
 }

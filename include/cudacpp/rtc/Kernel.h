@@ -63,7 +63,7 @@ public:
  	}
 
 	template<typename... ARGS>
-	CUresult launch(const Stream& stream, const Grid<3, 3>& grid, unsigned int sharedMem, const ARGS& ...args);
+	CUresult launch(const Stream& stream, const Grid<3, 3, 3>& grid, unsigned int sharedMem, const ARGS& ...args);
 
 	template<typename... ARGS>
 	CUresult launchAndWait(const Stream& stream, const ARGS& ...args) {
@@ -176,7 +176,7 @@ inline Kernel & Kernel::instantiate() {
 
 
 template<typename... ARGS>
-inline CUresult Kernel::launch(const Stream& stream, const Grid<3, 3>& grid, unsigned int sharedMem, const ARGS& ...args) {
+inline CUresult Kernel::launch(const Stream& stream, const Grid<3, 3, 3>& grid, unsigned int sharedMem, const ARGS& ...args) {
 	auto vec = detail::BuildArgs(args...);
 	auto vecPtr = (vec.empty()) ? nullptr : vec.data();
 	return cuLaunchKernel(
