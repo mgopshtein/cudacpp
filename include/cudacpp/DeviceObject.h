@@ -15,58 +15,57 @@ namespace cudacpp {
 namespace detail_DeviceObject {
 
 template<typename T, typename... ARGS>
-__global__ void AllocateObject(DevicePtr<T*> p, ARGS... args) {
-	//p[0] = static_cast<T*>(malloc(sizeof(T)));
-	//new (p[0]) T(args...);
-	p[0] = new T(args...);
-
-	int a = p[0]->operator()(2, 3);
+__global__ void AllocateObject(DevicePtr<T> p, ARGS... args) {
+	new (p) T(args...);
 }
 
 template<typename T>
-__global__ void DeleteObject(DevicePtr<T*> p) {
-	free(p[0]);
+__global__ void DeleteObject(DevicePtr<T> p) {
+	p->~T();
 }
 
 }
 
 template<typename T>
 class DeviceObject {
-	T* _p = nullptr;
-	DeviceMemory<T*> _pp;
+	DeviceMemory<T> _p;
 
 	template<typename... ARGS>
-	static void AllocateObjectOnDevice(DevicePtr<T*> pp, ARGS... args) {
-		detail_DeviceObject::AllocateObject<<<1, 1>>>(pp, args...);
+	static void AllocateObjectOnDevice(DevicePtr<T> p, ARGS... args) {
+		detail_DeviceObject::AllocateObject<<<1, 1>>>(p, args...);
 		auto res = cudaDeviceSynchronize();
 	}
 
-	static void DeleteObjectOnDevice(DevicePtr<T*> pp) {
-		detail_DeviceObject::DeleteObject<<<1, 1>>>(pp);
+	static void DeleteObjectOnDevice(DevicePtr<T> p) {
+		detail_DeviceObject::DeleteObject<<<1, 1>>>(p);
 		auto res = cudaDeviceSynchronize();
 	}
 
 public:
 	template<typename... ARGS>
 	DeviceObject(ARGS... args) 
-		: _pp(DeviceMemory<T*>::AllocateElements(1))
+		: _p(DeviceMemory<T>::AllocateElements(1))
 	{
-		AllocateObjectOnDevice(_pp, args...);
-		auto res = CopyElements(&_p, _pp, 1);
+		detail_DeviceObject::AllocateObject<T><<<1, 1>>>(_p, args...);
+		cudaDeviceSynchronize();
+		//AllocateObjectOnDevice(_p, args...);
+		//auto res = CopyElements(&_p, _pp, 1);
 	}
 
 	DeviceObject(DeviceObject &&from)
-		: _pp(std::move(from._pp))
+		: _p(std::move(from._p))
 	{}
 
 	DeviceObject& operator=(DeviceObject &&from) {
-		_pp = std::move(from._pp);
+		_p = std::move(from._p);
 		return *this;
 	}
 
 	~DeviceObject() {
-		if (_pp) {
-			DeleteObjectOnDevice(_pp);
+		if (_p) {
+			//DeleteObjectOnDevice(_p);
+			detail_DeviceObject::DeleteObject<T><<<1, 1 >>>(_p);
+			auto res = cudaDeviceSynchronize();
 		}
 	}
 
@@ -75,7 +74,7 @@ public:
 
 public:
 	operator DevicePtr<T>() const { 
-		return DevicePtr<T>::FromRawDevicePtr(_p);
+		return _p;
 	}
 };
 

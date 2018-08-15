@@ -1,3 +1,5 @@
+#ifdef FIXED_GRID_INDEX
+
 
 #include "cudacpp\rtc\Program.h"
 #include "cudacpp\CudaDevice.h"
@@ -31,7 +33,7 @@ int testinvokeRTC(int size) {
 	kernel.init(module, prog);
 
 
-	Grid<3, 3> grid(Size<1>(1), Size<1>(32));
+	Grid<3, 3, 3> grid{ Size<1>(1), Size<1>(32), Size<1>(0) };
 
 	float *ptr;
 	cudaMallocManaged(&ptr, sizeof(float) * 32 * 10);
@@ -46,3 +48,6 @@ int testinvokeRTC(int size) {
 	std::cout << "testinvokeRTC: " << (check ? "PASSED" : "FAILED") << '\n';
 	return 0;
 }
+
+
+#endif

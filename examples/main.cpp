@@ -7,6 +7,8 @@ int testVirtual(int size, int *c, int val);
 int testNonVirtual(int size, int *c, int val);
 int testLambda(int size, int *c, int val);
 int testinvokeRTC(int size);
+int testUnroll(int size);
+
 
 int main() {
 	const int arraySize = 5;
@@ -17,8 +19,9 @@ int main() {
 	//basics(arraySize, a, b, c);
 	//testVirtual(arraySize, c, 10);
 	//testNonVirtual(arraySize, c, 10);
-	//testLambda(arraySize, c, 17);
-	testinvokeRTC(1 << 20);
+	testLambda(arraySize, c, 17);
+	//testinvokeRTC(1 << 20);
+	//testUnroll(8);
 
 
 	std::cout << "Resulting vector C:";

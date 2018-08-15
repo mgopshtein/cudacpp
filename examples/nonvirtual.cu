@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include "cudacpp\DeviceVector.h"
+#include "cudacpp\DeviceMemory.h"
 
 
 namespace nonvirtual {
@@ -66,7 +67,7 @@ int testNonVirtual(int size, int *c, int val) {
 	}
 
 	// Allocate GPU buffers for three vectors (two input, one output) 
-	cudacpp::DeviceMemoryT<int> dev_c(size);
+	auto dev_c = cudacpp::DeviceMemory<int>::AllocateElements(size);
 
 	// Launch a kernel on the GPU with one thread for each element.
 	nonvirtual::addKernel << <1, size >> >(dev_c, val);
@@ -87,7 +88,7 @@ int testNonVirtual(int size, int *c, int val) {
 	}
 
 	// Copy output vector from GPU buffer to host memory.
-	cudaStatus = cudaMemcpy(c, dev_c, size * sizeof(int), cudaMemcpyDeviceToHost);
+	cudaStatus = CopyElements(c, dev_c, size);
 	if (cudaStatus != cudaSuccess) {
 		fprintf(stderr, "cudaMemcpy failed!");
 		return cudaStatus;
